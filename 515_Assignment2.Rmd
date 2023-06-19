@@ -1,0 +1,150 @@
+---
+title: "ANA 515 Assignment 2"
+author: "Rajas Purohit"
+date: "`r Sys.Date()`"
+output: html_document
+bibliography: "references.bib"  
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Section 1: Description of the data
+Describe the dataset you are using, both in terms of the content and in terms of its format
+
+#### Content: 
+
+**What is this data measuring?**
+
+This dataset contains demographic, electoral and endorsement data for Senate, House and governor candidates in the 2022 primary elections (except the state of Louisiana). 
+
+
+
+**How was it collected?**
+
+"Electoral, endorsement and gender data was collected by FiveThirtyEight from state election officials, organization and campaign websites, news reports, candidate interviews, social media and the Center for American Women and Politics. Race data was collected by political scientists Bernard Fraga and Hunter Rendleman using statements made by candidates, membership in racial and ethnic caucuses or organizations, racial and ethnic advocacy organizations, news reports and candidate websites."
+
+**What kinds of research questions are you hoping to use it to answer?**
+
+It can be used to conduct demographic and endorsement analysis on candidates running for election. It was used in the following FiveThirtyEight articles:
+
+Trump’s Endorsees Have Started Losing More. But Don’t Read Into That For 2024.(Aug. 29, 2022):
+
+<https://fivethirtyeight.com/features/trumps-endorsees-have-started-losing-more-but-dont-read-into-that-for-2024/>
+
+People Of Color Make Up 41 Percent Of The U.S. But Only 28 Percent Of General-Election Candidates (Sept. 21, 2022):
+
+<https://fivethirtyeight.com/features/2022-candidates-race-data/>
+
+Progressives Took A Step Back In The 2022 Primaries — But They’re Playing The Long Game (Sept. 27, 2022):
+
+<https://fivethirtyeight.com/features/progressives-democrats-2022/>
+
+2022 Is Not Another ‘Year Of The Woman’ (Oct. 10, 2022):
+
+<https://fivethirtyeight.com/features/2022-women-candidates-data/>
+
+
+#### Format: 
+**What type of file is it saved in?**
+
+It is a comma separated flat file.
+
+**Is it fixed width or delimited?**
+
+It is a delimited flat file, using commas as delimiters.
+
+
+
+### Section 2: Reading the data into R
+```{r readingData, include=FALSE, echo=FALSE}
+# using read_csv() from tidyverse package
+#install.packages("tidyverse")
+library("tidyverse")
+url1 <- "https://raw.githubusercontent.com/fivethirtyeight/data/master/primary-project-2022/dem_candidates.csv"
+democratCandidates <- read_csv(url1)
+url2 <- "https://raw.githubusercontent.com/fivethirtyeight/data/master/primary-project-2022/rep_candidates.csv"
+republicanCandidates <- read_csv(url2)
+```
+We have read **dem_candidates.csv** and **rep_candidates.csv** using the tidyverse package and stored the data into dataframes 
+
+### Section 3: Clean the data
+```{r cleaningData, include=FALSE, echo=FALSE}
+#install.packages("dplyr")
+library(dplyr)
+select(democratCandidates, Candidate, Incumbent, State, Office, `Primary Outcome`, AOC)
+# Renaming "Primary Outcome" column to "PrimaryOutcome"
+rename(democratCandidates, "PrimaryOutcome"=`Primary Outcome`)
+# filtering for candidates endorsed by Alexandria Occasio-Cortez
+AOCendorsed <- filter(democratCandidates, AOC == "Yes")
+# filtering for candidates endorsed by Bernie Sanders
+SandersEndorsed <- filter(democratCandidates, Sanders == "Yes")
+```
+We have filtered **dem_candidates.csv** using the dplyr package for candidates endorsed by AOC and Bernie Sanders
+
+### Section 4: Characteristics of the data
+
+```{r CharacteristicsOfData, include=FALSE, echo=FALSE}
+rowDemocraticCandidates <- nrow(democratCandidates)
+columnDemocraticCandidates <- ncol(democratCandidates)
+rowRepublicanCandidates <- nrow(republicanCandidates)
+columnRepublicanCandidates <- ncol(republicanCandidates)
+
+url3 <- "https://raw.githubusercontent.com/rajas-purohit/ANA-515-Week-4-Assignment2/main/democratCandidatesMetadata.csv"
+democratCandidatesMetadata <- read_csv(url3)
+url4 <- "https://raw.githubusercontent.com/rajas-purohit/ANA-515-Week-4-Assignment2/main/republicanCandidatesMetadata.csv"
+republicCandidatesMetadata <- read_csv(url4)
+url5 <- "https://raw.githubusercontent.com/rajas-purohit/ANA-515-Week-4-Assignment2/main/candidatesCommonMetadata.csv"
+candidatesCommonMetadata <- read_csv(url5)
+
+#democratCandidatesMetadata %>%
+#  knitr::kable(democratCandidatesMetadata)
+
+#republicCandidatesMetadata %>%
+#  knitr::kable()
+
+#candidatesCommonMetadata %>%
+#  knitr::kable()
+```
+The dataframe **democratCandidates** has `r rowDemocraticCandidates` rows and `r columnDemocraticCandidates` columns, while the dataframe **republicanCandidates** has `r rowRepublicanCandidates` rows and `r columnRepublicanCandidates` columns. The names of the columns and a brief description of each are in the tables below:
+
+
+**common metadata:**
+`r knitr::kable(candidatesCommonMetadata)`
+
+
+**democratCandidates specific metadata:**
+`r knitr::kable(democratCandidatesMetadata)`
+
+
+**republicanCandidates specific metadata:**
+`r knitr::kable(republicCandidatesMetadata)`
+
+
+
+### Section 5: Summary statistics
+
+```{r summaryStatistics, include=FALSE, echo=FALSE}
+summaryDataFrameDemocrat <- select(democratCandidates, `Primary Votes`, `Primary %`, `Runoff Votes`)
+summaryDataFrameDemocrat$`Primary Votes` <- as.numeric(summaryDataFrameDemocrat$`Primary Votes`)
+summaryDataFrameDemocrat$`Primary %` <- as.numeric(summaryDataFrameDemocrat$`Primary %`)
+summaryDataFrameDemocrat$`Runoff Votes` <- as.numeric(summaryDataFrameDemocrat$`Runoff Votes`)
+summaryDataFrameDemocratCleaned <- replace(summaryDataFrameDemocrat,is.na(summaryDataFrameDemocrat),0)
+summary1 <- summary(summaryDataFrameDemocrat)
+
+summaryDataFrameRepublican <- select(republicanCandidates, `Primary Votes`, `Primary %`, `Runoff Votes`)
+summaryDataFrameRepublican$`Primary Votes` <- as.numeric(summaryDataFrameRepublican$`Primary Votes`)
+summaryDataFrameRepublican$`Primary %` <- as.numeric(summaryDataFrameRepublican$`Primary %`)
+summaryDataFrameRepublican$`Runoff Votes` <- as.numeric(summaryDataFrameRepublican$`Runoff Votes`)
+summaryDataFrameRepublicanCleaned <- replace(summaryDataFrameRepublican,is.na(summaryDataFrameRepublican),0)
+summary2 <- summary(summaryDataFrameRepublican)
+```
+
+Summary Statistics for **democratCandidates**:
+
+`r knitr::kable(summary1)`
+
+Summary Statistics for **republicanCandidates**
+
+`r knitr::kable(summary2)`
