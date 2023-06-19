@@ -1,0 +1,18 @@
+﻿Column,Description
+Candidate,The name of the candidate.
+Gender,The candidate's gender.
+Race 1,What race or ethnicity (including Hispanic origin) the candidate primarily identifies as.
+Race 2,"What race or ethnicity (including Hispanic origin) the candidate secondarily identifies as, if any."
+Race 3,"What race or ethnicity (including Hispanic origin) the candidate tertiarily identifies as, if any."
+Incumbent,Whether the candidate was an incumbent.
+Incumbent Challenger,Whether one of the candidate’s opponents in the primary was an incumbent.
+State,The state in which the candidate ran.
+Primary Date,The date of the primary in which the candidate ran.
+Office,The office for which the candidate ran.
+District,"For U.S. House races, the congressional district number for which the candidate ran."
+Primary Votes,"The raw number of votes received by the candidate in his or her primary. In states with runoffs, the results of the first primary round are used. For races that were canceled because they were uncontested, this number is 1."
+Primary %,"The percentage of the vote received by the candidate in his or her primary. In states with all-party primaries, this is the percentage of the Democratic or Republican vote received by the candidate. In states with runoffs, the results of the first primary round are used. For candidates who were unopposed, this number is 100."
+Primary Outcome,"Whether the candidate “Won” or “Lost” his or her primary or, if applicable, “Made runoff.”"
+Runoff Votes,"The raw number of votes received by the candidate in his or her runoff, if applicable."
+Runoff %,"The percentage of the vote received by the candidate in his or her runoff, if applicable."
+Runoff Outcome,"Whether the candidate “Won” or “Lost” his or her runoff, if applicable."
